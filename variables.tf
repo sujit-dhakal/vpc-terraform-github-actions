@@ -7,3 +7,8 @@ variable "subnet_cidr" {
     description = "Subnet cidrs"
     type = list(string)
 }
+
+variable "azs" {
+  description = "Availability zones"
+  type = list(string)
+}

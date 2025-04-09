@@ -13,3 +13,8 @@ variable "subnet_names" {
   type = list(string)
   default = [ "PublicSubnet1", "PublicSubnet2" ]
 }
+
+variable "azs" {
+  description = "Availability zones"
+  type = list(string)
+}
