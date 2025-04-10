@@ -1,0 +1,48 @@
+name: Terraform CI CD Pipeline for Deploying AWS Resources
+run-name: ${{ github.actor }} has triggered the pipeline
+
+on:
+  push:
+    branches:
+      - "main"
+
+env:
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_KEY }}
+
+jobs:
+  build:
+    name: terraform ci cd
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Create terraform.tfvars
+        run: |
+          echo 'region = "${{ secrets.REGION }}"' >> terraform.tfvars
+          echo 'vpc_cidr = "${{ secrets.VPC_CIDR }}"' >> terraform.tfvars
+          echo 'subnet_cidr = ${{ secrets.SUBNET_CIDR }}' >> terraform.tfvars
+          echo 'azs = ${{ secrets.AVAILABILITY_ZONES }}' >> terraform.tfvars
+
+      - name: Terraform init
+        run: terraform init
+
+      - name: Terraform validate
+        run: terraform validate
+
+      - name: Terraform plan
+        run: terraform plan
+
+      - name: Terraform apply
+        run: terraform apply -auto-approve
+
+      - name: Wait 5 minutes before destroy
+        run: sleep 300
+
+      - name: Terraform destroy
+        run: terraform destroy -auto-approve
