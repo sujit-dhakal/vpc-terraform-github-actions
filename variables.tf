@@ -12,3 +12,8 @@ variable "azs" {
   description = "Availability zones"
   type = list(string)
 }
+
+variable "region" {
+  description = "Region"
+  type = string
+}
